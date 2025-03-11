@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floating Cloud with Sleepy Face</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #001d3d; /* Dark blue background for the night sky */
+            position: relative;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 1.5s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { transform: scale(1.8); }
+            100% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        .cloud {
+            position: absolute;
+            width: 120px;
+            height: 60px;
+            background: #fff;
+            border-radius: 50px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            top: 50%;
+            transform: translateY(-100%);
+            cursor: pointer; /* Cursor changes on hover */
+        }
+
+        .cloud:before, .cloud:after {
+            content: '';
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .cloud:before {
+            width: 90px;
+            height: 85px;
+            top: -20px;
+            left: 10px;
+        }
+
+        .cloud:after {
+            width: 70px;
+            height: 70px;
+            top: -10px;
+            right: 10px;
+        }
+
+        .info-bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 150px;
+            text-align: center;
+            visibility: hidden; /* Hidden by default */
+            opacity: 0; /* Hidden by default */
+            transition: visibility 0s, opacity 0.2s ease-in-out; /* Transition for smooth appearance */
+        }
+
+         /* Audio button styles */
+         .audio-button {
+            position: center;
+            
+            background-color: #007bff;
+            color: rgb(101, 214, 255);
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 0; /* Ensure button is above stars */
+            font-size: 16px;
+        }
+
+        .audio-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+</head>
+<body>
+    <button class="audio-button" id="audioButton">Play Music</button>
+    <audio id="backgroundMusic" src="nightmusic.wav" loop></audio>
+
+    <div class="cloud" data-info="Elephants sleep less than any other animal."></div>
+    <div class="cloud" data-info="Bright screens can affect your circadian rhythm"></div>
+    <div class="cloud" data-info="You Can not Catch Up on Sleep"></div>
+
+    <div class="info-bubble" id="infoBubble"></div>
+
+    <script>
+// Play or pause background music
+audioButton.addEventListener('click', () => {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                audioButton.innerText = 'Pause Music';
+            } else {
+                backgroundMusic.pause();
+                audioButton.innerText = 'Play Music';
+            }
+        });
+
+        const clouds = document.querySelectorAll('.cloud');
+        const infoBubble = document.getElementById('infoBubble');
+
+        // Function to animate clouds
+        function animateCloud(cloud) {
+            const startX = Math.random() * -200; // Start position off-screen left
+            const endX = window.innerWidth + 200; // End position off-screen right
+            const duration = Math.random() * 5 + 5; // Random duration between 5 to 10 seconds
+
+            gsap.fromTo(cloud, 
+                { x: startX }, 
+                { x: endX, duration: duration, ease: "none", onComplete: () => animateCloud(cloud) } // Repeat animation
+            );
+        }
+
+        // Animate all clouds
+        clouds.forEach(cloud => animateCloud(cloud));
+
+        // Show information bubble on hover
+        clouds.forEach(cloud => {
+            cloud.addEventListener('mouseenter', (event) => {
+                const info = event.currentTarget.getAttribute('data-info');
+                infoBubble.innerText = info;
+                
+                // Position the bubble above the cloud
+                const rect = cloud.getBoundingClientRect();
+                infoBubble.style.left = `${rect.left + (rect.width / 2) - (infoBubble.offsetWidth / 2)}px`;
+                infoBubble.style.top = `${rect.top - infoBubble.offsetHeight - 10}px`;
+                
+                // Show the bubble
+                infoBubble.style.visibility = 'visible';
+                infoBubble.style.opacity = 1;
+            });
+
+            cloud.addEventListener('mouseleave', () => {
+                // Hide the bubble
+                infoBubble.style.visibility = 'hidden';
+                infoBubble.style.opacity = 0;
+            });
+        });
+    
+    </script>
+</body>
+<body>
+
+    <script>
+        // Create stars in the background
+        const numberOfStars = 200;
+        const body = document.body;
+
+        for (let i = 0; i < numberOfStars; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            const size = Math.random() * 4 + 2; // Random size between 2px and 6px
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.top = `${Math.random() * 100}vh`; // Random vertical position
+            star.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+            star.style.animationDuration = `${Math.random() * 1 + 0.5}s`; // Random twinkle speed
+            body.appendChild(star);
+        }
+
+       
+    </script>
+</body>
+</html>
+
+<title>Clickable Timeline with Information and Sound</title>
+    <style>
+        body2 {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: transparent; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            justify-content: center;
+        }
+span {
+font-family: sans-serif;
+color: white;
+}
+        .timeline {
+            position: relative;
+            width: 80%;
+            height: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #007bff; /* Timeline line color */
+            z-index: 1;
+        }
+
+        .dot {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            background: #007bff; /* Dot color */
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 2; /* Ensure dots are above the line */
+            transition: transform 0.2s; /* Smooth scaling effect */
+        }
+
+        .dot:hover {
+            transform: scale(1.5); /* Scale on hover */
+        }
+
+        .info-box {
+            display: none; /* Hidden by default */
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff; 
+            width: 80%;
+            text-align: center;
+        }
+
+        .info-box img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+        img {
+  width: 400px;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+    </style>
+</head>
+<body2>
+
+    <div class="timeline">
+        <div class="line"></div>
+        <div class="dot" data-info="
+        Stage 1, also called N1, is essentially when a person first falls asleep. This stage normally lasts just one to seven minutes.
+
+During N1 sleep, the body has not fully relaxed, though the body and brain activities start to slow with periods of brief movements. There are light changes in brain activity associated with falling asleep in this stage.
+It is easy to wake someone up during this sleep stage, but if a person is not disturbed, they can move quickly into stage 2. As the night unfolds, an uninterrupted sleeper may not spend much more time in stage 1 as they move through further sleep cycles." data-image="https://img.freepik.com/free-vector/cute-panda-sleeping-cartoon-icon-illustration-animal-nature-icon-concept-isolated-flat-cartoon-style_138676-2566.jpg">
+            <span>1</span>
+        </div>
+        <div class="dot" data-info="During stage 2, or N2, the body enters a more subdued state including a drop in temperature, relaxed muscles, and slowed breathing and heart rate. At the same time, brain waves show a new pattern and eye movement stops. On the whole, brain activity slows, but there are short bursts of activity 
+        Stage 2 sleep can last for 10 to 25 minutes during the first sleep cycle, and each N2 stage can become longer during the night. Collectively, a person typically spends about half their sleep time in N2 sleep." data-image="https://miro.medium.com/v2/resize:fit:1024/1*wjxycequ4sTCYnvGb-IKCA.jpeg">
+            <span>2</span>
+        </div>
+        <div class="dot" data-info=
+        "Stage 3 sleep is also known as N3 or deep sleep, and it is harder to wake someone up if they are in this phase. Muscle tone, pulse, and breathing rate decrease in N3 sleep as the body relaxes even further.
+
+        The brain activity during this period has an identifiable pattern of what are known as delta waves. For this reason, stage 3 may also be called delta sleep or slow-wave sleep (SWS).
+        
+        Experts believe that this stage is critical to restorative sleep, allowing for bodily recovery and growth. It may also bolster the immune system and other key bodily processes. Even though brain activity is reduced, there is evidence that deep sleep contributes to insightful thinking 
+        You spend the most time in deep sleep during the first half of the night. During the early sleep cycles, N3 stages commonly last for 20 to 40 minutes. As you continue sleeping, these stages get shorter, and more time gets spent in REM sleep instead.
+        " data-image="https://www.sleepfoundation.org/wp-content/uploads/2023/03/SF-23-069_SleepCycle_Chart_Desktop-1536x977.png">
+            <span>3</span>
+        </div>
+        <div class="dot" data-info="
+        During REM sleep, brain activity picks up, nearing levels seen when you are awake. At the same time, the body experiences atonia, which is a temporary paralysis of the muscles, with two exceptions: the eyes and the muscles that control breathing. Even though the eyes are closed, they can be seen moving quickly, which is how this stage gets its name.
+
+REM sleep is believed to be essential to cognitive functions like memory 
+More than 2 million healthcare providers around the world choose UpToDate to help make appropriate care decisions and drive better health outcomes. UpToDate delivers evidence-based clinical decision support that is clear, actionable, and rich with real-world insights.
+ REM sleep is known for the most vivid dreams, which is explained by the significant uptick in brain activity. Dreams can occur in any sleep stage, but they are less common and intense in the NREM periods.
+
+Under normal circumstances, you do not enter a REM sleep stage until you have been asleep for about 90 minutes. As the night goes on, REM stages get longer, especially in the second half of the night. While the first REM stage may last only a few minutes, later stages can last for around an hour. In total, REM stages make up around 25% of sleep in adults." data-image="https://www.shutterstock.com/image-vector/young-female-get-healthy-sleeping-260nw-1988850308.jpg">
+            <span>REM</span>
+        </div>
+        <div class="dot" 
+        data-info="
+        Age: Time in each stage changes dramatically over a person’s life. Newborns spend far more time in REM sleep and may enter a REM stage as soon as they fall asleep. As they get older, their sleep becomes similar to that of adults. Older adults tend to spend less time in REM sleep.
+Recent sleep patterns: If a person gets irregular or insufficient sleep over a period of days or more, it can cause an abnormal sleep cycle.
+Alcohol: Alcohol and some other drugs can alter sleep architecture. For example, alcohol decreases REM sleep early in the night, but as the alcohol wears off, there is a REM sleep rebound, with prolonged REM stages.
+Sleep disorders: Sleep apnea, restless legs syndrome (RLS), and other conditions that cause multiple awakenings may interrupt a healthy sleep cycle.
+        " 
+        data-image="https://cms.buzzrx.com/globalassets/buzzrx/blogs/sleep-deprivation.webp">
+            <span>IMPACT</span>
+        </div>
+    </div>
+
+    <div class="info-box" id="infoBox">
+        <p id="infoText"></p>
+        <img id="infoImage" src="" alt="" style="display: none;">
+    </div>
+
+    <audio id="twinkleSound" src="effect.wav"></audio>
+
+    <script>
+        const dots = document.querySelectorAll('.dot');
+        const infoBox = document.getElementById('infoBox');
+        const infoText = document.getElementById('infoText');
+        const infoImage = document.getElementById('infoImage');
+        const twinkleSound = document.getElementById('twinkleSound');
+
+        // Show information box on click
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const info = dot.getAttribute('data-info');
+                const imageSrc = dot.getAttribute('data-image');
+                
+                infoText.innerText = info;
+                infoImage.src = imageSrc; // Set the corresponding image
+                infoImage.style.display = 'block'; // Show the image
+                infoBox.style.display = 'block'; // Show the info box
+                
+                // Play the twinkle sound
+                twinkleSound.currentTime = 0; // Reset sound to start
+                twinkleSound.play();
+            });
+        });
+    </script>
+</body2>
+</html>
